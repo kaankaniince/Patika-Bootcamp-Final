@@ -1,12 +1,47 @@
-version: '3'
-
 services:
-  
-
+  backend-service:
+    image: backend_app
+    container_name: backend-service_data
+    ports:
+      - "3000:3000" # Correct port mapping
+    environment:
+      - MONGODB_URI=mongodb://root:example@mongodb:27017/backend_db?authSource=admin
+      - KAFKA_BROKER=kafka:29092
+    networks:
+      - app-network
+    volumes:
+      - ./backend:/app
+ 
+  billing-service:
+    image: billing_app
+    container_name: billing-service_data
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGODB_URI=mongodb://root:example@mongodb:27017/billing_db?authSource=admin
+      - KAFKA_BROKER=kafka:29092
+    networks:
+      - app-network
+    volumes:
+      - ./microservice/billing-service:/app
+ 
+  payment-service:
+    image: payment_app
+    container_name: payment-service_data
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://root:example@mongodb:27017/payment_db?authSource=admin
+      - KAFKA_BROKER=kafka:29092
+    networks:
+      - app-network
+    volumes:
+      - ./microservice/payment-service:/app
+ 
   mongodb:
     image: mongo:latest
     ports:
-      - "27018:27017"
+      - "27018:27017" # Make sure this port is open
     volumes:
       - mongodb_data:/data/db
     environment:
@@ -15,7 +50,7 @@ services:
     networks:
       - app-network
     container_name: ecommerce-mongodb
-
+ 
   redis:
     image: redis:latest
     ports:
@@ -23,7 +58,7 @@ services:
     networks:
       - app-network
     container_name: ecommerce-redis
-
+ 
   kafka:
     image: confluentinc/cp-kafka
     ports:
@@ -40,14 +75,14 @@ services:
     networks:
       - app-network
     volumes:
-    - type: volume
-      source: zksingle-ksingle_broker-data
-      target: /var/lib/kafka/data
-    - type: volume
-      source: zksingle-ksingle_broker-secrets
-      target: /etc/kafka/secrets
+      - type: volume
+        source: zksingle-ksingle_broker-data
+        target: /var/lib/kafka/data
+      - type: volume
+        source: zksingle-ksingle_broker-secrets
+        target: /etc/kafka/secrets
     container_name: ecommerce-kafka
-
+ 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     ports:
@@ -58,17 +93,17 @@ services:
     networks:
       - app-network
     volumes:
-    - type: volume
-      source: zksingle-ksingle_zookeeper-data
-      target: /var/lib/zookeeper/data
-    - type: volume
-      source: zksingle-ksingle_zookeeper-log
-      target: /var/lib/zookeeper/log
-    - type: volume
-      source: zksingle-ksingle_zookeeper-secrets
-      target: /etc/zookeeper/secrets
+      - type: volume
+        source: zksingle-ksingle_zookeeper-data
+        target: /var/lib/zookeeper/data
+      - type: volume
+        source: zksingle-ksingle_zookeeper-log
+        target: /var/lib/zookeeper/log
+      - type: volume
+        source: zksingle-ksingle_zookeeper-secrets
+        target: /etc/zookeeper/secrets
     container_name: ecommerce-zookeeper
-
+ 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
     container_name: ecommerce-elasticsearch
@@ -89,7 +124,7 @@ services:
       - "9300:9300"
     networks:
       - app-network
-
+ 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.12.1
     container_name: ecommerce-kibana
@@ -101,13 +136,13 @@ services:
       - elasticsearch
     networks:
       - app-network
-
+ 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     ports:
       - "8080:8080"
     environment:
-      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_NAME: snea
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     depends_on:
@@ -116,7 +151,7 @@ services:
     networks:
       - app-network
     container_name: ecommerce-kafka-ui
-
+ 
 volumes:
   mongodb_data:
   elasticsearch_data:
@@ -125,7 +160,7 @@ volumes:
   zksingle-ksingle_zookeeper-data:
   zksingle-ksingle_zookeeper-log:
   zksingle-ksingle_zookeeper-secrets:
-
+ 
 networks:
   app-network:
     driver: bridge

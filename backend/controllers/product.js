@@ -54,6 +54,7 @@ const productController = {
       res.status(200).send({ response: response });
     } catch (e) {
       console.log(e, "error");
+      res.status(500).send({ error: "Internal Server Error" });
     }
   },
   getProducts: async (req, res) => {
@@ -63,6 +64,7 @@ const productController = {
       res.status(200).send({ response: response });
     } catch (e) {
       console.log(e, "error");
+      res.status(500).send({ error: "Internal Server Error" });
     }
   },
 };

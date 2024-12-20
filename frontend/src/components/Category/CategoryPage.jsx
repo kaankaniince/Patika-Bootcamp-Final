@@ -18,6 +18,7 @@ function CategoryPage() {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [searchQuery, setSearchQuery] = useState(""); // New state for search
   const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,19 +44,28 @@ function CategoryPage() {
   }, []);
 
   // Filter the data based on category, price range, and search query
-  const filteredData = data.filter((item) => {
-    const matchesCategory = selectedCategories.length
-      ? selectedCategories.includes(item.category)
-      : true;
-    const matchesPrice =
-      item.price >= priceRange.min && item.price <= priceRange.max;
-    const matchesSearch = searchQuery
-      ? item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.author.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
+  const filteredData = data
+    .filter((item) => {
+      const matchesCategory = selectedCategories.length
+        ? selectedCategories.includes(item.category)
+        : true;
+      const matchesPrice =
+        item.price >= priceRange.min && item.price <= priceRange.max;
+      const matchesSearch = searchQuery
+        ? item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.author.toLowerCase().includes(searchQuery.toLowerCase())
+        : true;
 
-    return matchesCategory && matchesPrice && matchesSearch;
-  });
+      return matchesCategory && matchesPrice && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "newest") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else if (sortOrder === "oldest") {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+      return 0;
+    });
 
   // Pagination: Slice the filtered data based on the current page
   const itemsPerPage = 12;
@@ -99,14 +109,18 @@ function CategoryPage() {
           <Grid>
             {/* Search */}
             <Grid.Col span={12}>
-              <Search onSearch={setSearchQuery} />
+              <Search onSearch={setSearchQuery} onSort={setSortOrder} />
             </Grid.Col>
           </Grid>
 
           {/* Render Cards */}
           <Grid gutter="lg">
             {paginatedData.map((item) => (
-              <Grid.Col span={4} key={item.id} onClick={() => navigate(`/book/${item.slug}`)}>
+              <Grid.Col
+                span={4}
+                key={item.id}
+                onClick={() => navigate(`/book/${item.slug}`)}
+              >
                 <CardComponent
                   image={`http://localhost:3000${item.image}`}
                   category={item.category}

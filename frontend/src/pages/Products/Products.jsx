@@ -250,8 +250,8 @@ export function Products() {
         <Table.Td>
           <Group gap="sm">
             <Image
-              height={30}
-              width={30}
+              h={30}
+              w={30}
               src={item.image ? `http://localhost:3000${item.image}` : null}
               radius={5}
               alt={item.productName || 'Product image'}

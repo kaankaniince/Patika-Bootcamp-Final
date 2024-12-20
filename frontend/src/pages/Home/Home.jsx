@@ -15,10 +15,11 @@ function Home() {
 
   // State for filters
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]); // Updated to array for multiple selections
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest"); // New state for sort order
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,22 +44,31 @@ function Home() {
     fetchData();
   }, []);
 
-  // Filter the data based on category, price range, and search query
-  const filteredData = data.filter((item) => {
-    const matchesCategory = selectedCategories.length
-      ? selectedCategories.includes(item.category)
-      : true;
-    const matchesPrice =
-      item.price >= priceRange.min && item.price <= priceRange.max;
-    const matchesSearch = searchQuery
-      ? item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.author.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
+  // Filter and sort the data
+  const filteredData = data
+    .filter((item) => {
+      const matchesCategory = selectedCategories.length
+        ? selectedCategories.includes(item.category)
+        : true;
+      const matchesPrice =
+        item.price >= priceRange.min && item.price <= priceRange.max;
+      const matchesSearch = searchQuery
+        ? item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.author.toLowerCase().includes(searchQuery.toLowerCase())
+        : true;
 
-    return matchesCategory && matchesPrice && matchesSearch;
-  });
+      return matchesCategory && matchesPrice && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "newest") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else if (sortOrder === "oldest") {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+      return 0;
+    });
 
-  // Pagination: Slice the filtered data based on the current page
+  // Pagination logic
   const itemsPerPage = 6;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
@@ -96,9 +106,9 @@ function Home() {
         <Grid.Col span={2}>
           <CategoryFilterPage
             category={categories}
-            onCategoryChange={setSelectedCategories} // Update with multi-selection handler
+            onCategoryChange={setSelectedCategories}
             onPriceRangeChange={setPriceRange}
-            selectedCategories={selectedCategories} // Pass selected categories array
+            selectedCategories={selectedCategories}
             priceRange={priceRange}
           />
         </Grid.Col>
@@ -107,7 +117,10 @@ function Home() {
           <Grid>
             {/* Search */}
             <Grid.Col span={12}>
-              <Search onSearch={setSearchQuery} />
+              <Search
+                onSearch={setSearchQuery}
+                onSort={setSortOrder} // Pass sort handler
+              />
             </Grid.Col>
           </Grid>
 
@@ -126,6 +139,9 @@ function Home() {
                   productName={item.productName}
                   description={item.description}
                   price={item.price}
+                  stock={item.stock}
+                  slug={item.slug}
+                  id={item._id}
                 />
               </Grid.Col>
             ))}

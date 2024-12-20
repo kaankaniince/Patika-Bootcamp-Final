@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppShellLayout } from "../layout/appShellLayout";
 import Home from "../pages/Home/Home";
 import SignUp from "../pages/SignUp/SignUp";
-//import { CartDetail } from "../pages/Cart/CartDetail";
+import Cart from "../pages/Cart/CartDetail";
 import Contact from "../pages/Contact/Contact";
 import About from "../pages/About/About";
 import Profile from "../pages/Profile/Profile";
@@ -34,6 +34,7 @@ export default function AppRoutes() {
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Category" element={<Category />} />
           <Route path="/About" element={<About />} />
+          <Route path="/Cart" element={<Cart />} />
           <Route
             path="/Profile"
             element={

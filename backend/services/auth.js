@@ -25,6 +25,7 @@ async function login(userParams) {
         email: user.email,
         username: user.username,
         role: user.role,
+        userId: user._id,
       },
     });
     return {
@@ -35,6 +36,7 @@ async function login(userParams) {
         email: user.email,
         username: user.username,
         role: user.role,
+        userId: user._id,
       },
     };
   } catch (e) {

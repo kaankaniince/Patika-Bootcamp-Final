@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.inputContainer {
+    padding: 0px !important;
+}
+
+.selectContainer {
+    width: 125px;
+    padding: 0px !important;
+}

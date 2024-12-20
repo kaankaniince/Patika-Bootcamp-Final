@@ -33,7 +33,7 @@ function Login() {
     const handleLogin = async () => {
         try {
             console.log('Attempting login...'); // Debug log
-            const response = await axios.post('http://host.docker.internal:3000/api/auth/login',
+            const response = await axios.post('http://localhost:3000/api/auth/login',
                 { email, password,  },
                 {
                     withCredentials: true,

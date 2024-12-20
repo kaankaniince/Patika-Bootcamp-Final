@@ -32,7 +32,7 @@ const BookDetailsPage = () => {
     const fetchBook = async () => {
       try {
         const response = await axios.get(
-          `http://host.docker.internal:3000/api/product/${slug}`
+          `http://localhost:3000/api/product/${slug}`
         );
         setBook(response.data.response);
       } catch (err) {
@@ -60,12 +60,12 @@ const BookDetailsPage = () => {
     price: book.price,
     category: book.category,
     author: book.author,
-    image: `http://host.docker.internal:3000${book.image}`, // Ensure the image URL is absolute
+    image: `http://localhost:3000${book.image}`, // Ensure the image URL is absolute
     description: book.description,
   };
 
   try {
-    await axios.post("http://host.docker.internal:3000/api/basket", {
+    await axios.post("http://localhost:3000/api/basket", {
       userId: user?.userId,
       product,
     });
@@ -120,7 +120,7 @@ const BookDetailsPage = () => {
         <Grid.Col xs={12} md={5}>
           <Paper shadow="sm" radius="md" p="md" withBorder>
             <Image
-              src={`http://host.docker.internal:3000${book.image}`}
+              src={`http://localhost:3000${book.image}`}
               alt={book.productName}
               radius="md"
               fit="contain"

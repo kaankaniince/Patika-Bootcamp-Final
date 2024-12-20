@@ -16,6 +16,7 @@ async function createUser(userParams) {
       password: hashedPassword,
       role,
     });
+    console.log("New User:", newUser);
     await newUser.save();
     return newUser;
   } catch (e) {

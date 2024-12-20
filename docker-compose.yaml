@@ -1,14 +1,4 @@
 services:
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017" # Make sure this port is open
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - app-network
-    container_name: ecommerce-mongodb
- 
   redis:
     image: redis:latest
     ports:
@@ -16,7 +6,7 @@ services:
     networks:
       - app-network
     container_name: ecommerce-redis
- 
+
   kafka:
     image: confluentinc/cp-kafka
     ports:
@@ -40,17 +30,16 @@ services:
         source: zksingle-ksingle_broker-secrets
         target: /etc/kafka/secrets
     container_name: ecommerce-kafka
- 
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     ports:
       - "2181:2181"
     environment:
-
       - ZOOKEEPER_CLIENT_PORT=2181
 
       - ZOOKEEPER_TICK_TIME=2000
-      
+
     networks:
       - app-network
     volumes:
@@ -64,13 +53,12 @@ services:
         source: zksingle-ksingle_zookeeper-secrets
         target: /etc/zookeeper/secrets
     container_name: ecommerce-zookeeper
-  
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     ports:
       - "8080:8080"
     environment:
-
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
@@ -80,6 +68,16 @@ services:
     networks:
       - app-network
     container_name: ecommerce-kafka-ui
+
+# mongodb:
+#   image: mongo:latest
+#   ports:
+#     - "27017:27017" # Make sure this port is open
+#   volumes:
+#     - mongodb_data:/data/db
+#   networks:
+#     - app-network
+#   container_name: ecommerce-mongodb
 
   # frontend:
   #   build:
@@ -113,7 +111,7 @@ services:
   #     - /backend/node_modules
   #   networks:
   #     - app-network
- 
+
   # billing-service:
   #   image: billing_app
   #   container_name: billing-service_data
@@ -121,7 +119,7 @@ services:
   #     - "3002:3002"
   #   networks:
   #     - app-network
- 
+
   # payment-service:
   #   image: payment_app
   #   container_name: payment-service_data
@@ -129,9 +127,7 @@ services:
   #     - "3001:3001"
   #   networks:
   #     - app-network
- 
-  
- 
+
   # elasticsearch:
   #   image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
   #   container_name: ecommerce-elasticsearch
@@ -152,7 +148,7 @@ services:
   #     - "9300:9300"
   #   networks:
   #     - app-network
- 
+
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:8.12.1
   #   container_name: ecommerce-kibana
@@ -164,18 +160,16 @@ services:
   #     - elasticsearch
   #   networks:
   #     - app-network
- 
-  
- 
+
 volumes:
-  mongodb_data:
+  # mongodb_data:
   # elasticsearch_data:
   zksingle-ksingle_broker-data:
   zksingle-ksingle_broker-secrets:
   zksingle-ksingle_zookeeper-data:
   zksingle-ksingle_zookeeper-log:
   zksingle-ksingle_zookeeper-secrets:
- 
+
 networks:
   app-network:
     driver: bridge

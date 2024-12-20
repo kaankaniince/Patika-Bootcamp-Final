@@ -16,7 +16,7 @@ function EditProfile() {
 
     const handleSubmit = async () => {
         try {
-            await axios.put(`http://host.docker.internal:3000/api/user/${userId}`, {
+            await axios.put(`http://localhost:3000/api/user/${userId}`, {
                 email,
                 username,
                 password: newPassword,

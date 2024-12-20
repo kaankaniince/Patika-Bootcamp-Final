@@ -35,7 +35,7 @@ export function Customers() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get("http://host.docker.internal:3000/api/user");
+      const response = await axios.get("http://localhost:3000/api/user");
       const fetchedData = response.data.response;
       setData(fetchedData);
     } catch (error) {
@@ -57,7 +57,7 @@ export function Customers() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://host.docker.internal:3000/api/user/${userId}`, {
+      await axios.delete(`http://localhost:3000/api/user/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,7 +82,7 @@ export function Customers() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://host.docker.internal:3000/api/auth/register",
+        "http://localhost:3000/api/auth/register",
         newUser,
         {
           headers: {
@@ -117,7 +117,7 @@ export function Customers() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `http://host.docker.internal:3000/api/user/${editUser._id}`,
+        `http://localhost:3000/api/user/${editUser._id}`,
         editUser,
         {
           headers: {

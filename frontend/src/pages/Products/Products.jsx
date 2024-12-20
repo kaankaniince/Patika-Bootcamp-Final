@@ -48,7 +48,7 @@ export function Products() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/product");
+        const response = await axios.get("http://host.docker.internal:3000/api/product");
         setData(response.data.response);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -82,7 +82,7 @@ export function Products() {
       image: null,
     });
 
-    setImagePreview(`http://localhost:3000${product.image}`);
+    setImagePreview(`http://host.docker.internal:3000${product.image}`);
   };
 
   const handleSaveProduct = async () => {
@@ -106,7 +106,7 @@ export function Products() {
 
       if (isEditing) {
         response = await axios.put(
-          `http://localhost:3000/api/product/${editProductId}`,
+          `http://host.docker.internal:3000/api/product/${editProductId}`,
           formData,
           {
             headers: {
@@ -125,7 +125,7 @@ export function Products() {
         );
       } else {
         response = await axios.post(
-          "http://localhost:3000/api/product",
+          "http://host.docker.internal:3000/api/product",
           formData,
           {
             headers: {
@@ -166,7 +166,7 @@ export function Products() {
       });
 
       // Refresh the data
-      const refreshResponse = await axios.get("http://localhost:3000/api/product");
+      const refreshResponse = await axios.get("http://host.docker.internal:3000/api/product");
       if (refreshResponse.data.response) {
         setData(refreshResponse.data.response);
       }
@@ -196,7 +196,7 @@ export function Products() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:3000/api/product/${id}`, {
+      await axios.delete(`http://host.docker.internal:3000/api/product/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -252,7 +252,7 @@ export function Products() {
             <Image
               h={30}
               w={30}
-              src={item.image ? `http://localhost:3000${item.image}` : null}
+              src={item.image ? `http://host.docker.internal:3000${item.image}` : null}
               radius={5}
               alt={item.productName || 'Product image'}
               fit="contain"

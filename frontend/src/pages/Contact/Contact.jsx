@@ -38,7 +38,7 @@ export default function Contact() {
       onSubmit={form.onSubmit(async (values) => {
         try {
           const response = await axios.post(
-            "http://localhost:3000/api/contact",
+            "http://host.docker.internal:3000/api/contact",
             values,
             {
               headers: { "Content-Type": "application/json" },

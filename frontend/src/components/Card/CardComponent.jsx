@@ -50,7 +50,7 @@ export function CardComponent({
     const userId = user?.userId;
 
     try {
-      await axios.post("http://localhost:3000/api/basket", {
+      await axios.post("http://host.docker.internal:3000/api/basket", {
         userId: userId,
         product: product,
       });

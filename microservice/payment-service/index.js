@@ -18,7 +18,7 @@ const kafka = new Kafka({
 const producer = kafka.producer();
 
 // MongoDB bağlantısı
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

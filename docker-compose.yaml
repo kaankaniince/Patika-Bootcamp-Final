@@ -1,52 +1,10 @@
 services:
-  backend-service:
-    image: backend_app
-    container_name: backend-service_data
-    ports:
-      - "3000:3000" # Correct port mapping
-    environment:
-      - MONGODB_URI=mongodb://root:example@mongodb:27017/backend_db?authSource=admin
-      - KAFKA_BROKER=kafka:29092
-    networks:
-      - app-network
-    volumes:
-      - ./backend:/app
- 
-  billing-service:
-    image: billing_app
-    container_name: billing-service_data
-    ports:
-      - "3002:3002"
-    environment:
-      - MONGODB_URI=mongodb://root:example@mongodb:27017/billing_db?authSource=admin
-      - KAFKA_BROKER=kafka:29092
-    networks:
-      - app-network
-    volumes:
-      - ./microservice/billing-service:/app
- 
-  payment-service:
-    image: payment_app
-    container_name: payment-service_data
-    ports:
-      - "3001:3001"
-    environment:
-      - MONGODB_URI=mongodb://root:example@mongodb:27017/payment_db?authSource=admin
-      - KAFKA_BROKER=kafka:29092
-    networks:
-      - app-network
-    volumes:
-      - ./microservice/payment-service:/app
- 
   mongodb:
     image: mongo:latest
     ports:
-      - "27018:27017" # Make sure this port is open
+      - "27017:27017" # Make sure this port is open
     volumes:
       - mongodb_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
     networks:
       - app-network
     container_name: ecommerce-mongodb
@@ -88,8 +46,11 @@ services:
     ports:
       - "2181:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+
+      - ZOOKEEPER_CLIENT_PORT=2181
+
+      - ZOOKEEPER_TICK_TIME=2000
+      
     networks:
       - app-network
     volumes:
@@ -103,58 +64,112 @@ services:
         source: zksingle-ksingle_zookeeper-secrets
         target: /etc/zookeeper/secrets
     container_name: ecommerce-zookeeper
- 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
-    container_name: ecommerce-elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    networks:
-      - app-network
- 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.12.1
-    container_name: ecommerce-kibana
-    ports:
-      - "5601:5601"
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    depends_on:
-      - elasticsearch
-    networks:
-      - app-network
- 
+  
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     ports:
       - "8080:8080"
     environment:
-      KAFKA_CLUSTERS_0_NAME: snea
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
     depends_on:
       - kafka
       - zookeeper
     networks:
       - app-network
     container_name: ecommerce-kafka-ui
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: frontend-service_data
+  #   stdin_open: true
+  #   ports:
+  #     - "5017:5173"
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - CHOKIDAR_INTERVAL=500
+  #   volumes:
+  #     - ./frontend:/frontend
+  #     - /frontend/node_modules
+  #   networks:
+  #     - app-network
+
+  # backend-service:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: backend-service_data
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - CHOKIDAR_INTERVAL=500
+  #   volumes:
+  #     - ./backend:/backend
+  #     - /backend/node_modules
+  #   networks:
+  #     - app-network
+ 
+  # billing-service:
+  #   image: billing_app
+  #   container_name: billing-service_data
+  #   ports:
+  #     - "3002:3002"
+  #   networks:
+  #     - app-network
+ 
+  # payment-service:
+  #   image: payment_app
+  #   container_name: payment-service_data
+  #   ports:
+  #     - "3001:3001"
+  #   networks:
+  #     - app-network
+ 
+  
+ 
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+  #   container_name: ecommerce-elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #     - cluster.name=docker-cluster
+  #     - bootstrap.memory_lock=true
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - elasticsearch_data:/usr/share/elasticsearch/data
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   networks:
+  #     - app-network
+ 
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.12.1
+  #   container_name: ecommerce-kibana
+  #   ports:
+  #     - "5601:5601"
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  #   depends_on:
+  #     - elasticsearch
+  #   networks:
+  #     - app-network
+ 
+  
  
 volumes:
   mongodb_data:
-  elasticsearch_data:
+  # elasticsearch_data:
   zksingle-ksingle_broker-data:
   zksingle-ksingle_broker-secrets:
   zksingle-ksingle_zookeeper-data:

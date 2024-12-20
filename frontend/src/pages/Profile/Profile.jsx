@@ -27,7 +27,7 @@ function Profile() {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/user/profile",
+        "http://host.docker.internal:3000/api/user/profile",
         {
           headers: {
             Authorization: `Bearer ${token}`,

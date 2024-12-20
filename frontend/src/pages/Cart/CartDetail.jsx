@@ -20,7 +20,7 @@ const Cart = () => {
   const fetchCart = async () => {
     if (!user || !isAuthenticated) return;
     try {
-      const response = await axios.get(`http://localhost:3000/api/basket/${user.userId}`);
+      const response = await axios.get(`http://host.docker.internal:3000/api/basket/${user.userId}`);
       setCart(response.data.response || []);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -34,7 +34,7 @@ const Cart = () => {
   const handleRemove = async (productId) => {
     // Bu fonksiyonun backend tarafında quantity azaltacak şekilde ayarlandığını varsayıyoruz.
     try {
-      await axios.delete("http://localhost:3000/api/basket", {
+      await axios.delete("http://host.docker.internal:3000/api/basket", {
         data: { userId: user.userId, productId },
       });
       fetchCart();
@@ -46,7 +46,7 @@ const Cart = () => {
   const handleAdd = async (item) => {
     // Bu fonksiyon product eklerken quantity artırır diye varsayıyoruz.
     try {
-      await axios.post("http://localhost:3000/api/basket", {
+      await axios.post("http://host.docker.internal:3000/api/basket", {
         userId: user.userId,
         product: {
           productId: item.productId,
@@ -68,7 +68,7 @@ const Cart = () => {
 
   const handleClear = async () => {
     try {
-      await axios.post("http://localhost:3000/api/basket/clear", {
+      await axios.post("http://host.docker.internal:3000/api/basket/clear", {
         userId: user?.userId,
       });
       fetchCart();

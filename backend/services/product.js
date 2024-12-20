@@ -21,22 +21,6 @@ async function createProduct(productParams, file) {
 
     await newProduct.save();
 
-    // Elasticsearch'e indeksleme
-    await elasticsearchClient.index({
-      index: "products",
-      id: newProduct._id.toString(),
-      body: {
-        productName,
-        author,
-        description,
-        category,
-        price,
-        stock,
-        image: imagePath,
-        slug: newProduct.slug,
-      },
-    });
-
     return newProduct;
   } catch (e) {
     console.error("Error saving product:", e);
@@ -124,7 +108,6 @@ async function updateProduct(productData, file) {
         const oldImagePath = path.join(
           __dirname,
           "..",
-          "public",
           existingProduct.image
         );
         try {

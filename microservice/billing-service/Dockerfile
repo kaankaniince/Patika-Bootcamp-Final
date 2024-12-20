@@ -1,7 +1,7 @@
-FROM node:19
+FROM node:22
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm cache clean --force && npm install --verbose
 COPY . .
 EXPOSE 3002
-CMD ["npm", "start"] 
+CMD ["npm", "start"]

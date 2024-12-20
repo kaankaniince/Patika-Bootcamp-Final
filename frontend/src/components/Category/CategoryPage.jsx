@@ -23,7 +23,7 @@ function CategoryPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/product");
+        const response = await axios.get("http://host.docker.internal:3000/api/product");
         const fetchedData = response.data.response;
 
         setData(fetchedData);
@@ -122,7 +122,7 @@ function CategoryPage() {
                 onClick={() => navigate(`/book/${item.slug}`)}
               >
                 <CardComponent
-                  image={`http://localhost:3000${item.image}`}
+                  image={`http://host.docker.internal:3000${item.image}`}
                   category={item.category}
                   author={item.author}
                   productName={item.productName}

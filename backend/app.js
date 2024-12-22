@@ -9,7 +9,7 @@ const { connectKafka } = require("./utils/kafka");
 
 const app = express();
 
-PORT = process.env.PORT || 5000;
+PORT = process.env.PORT || 3000;
 
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {

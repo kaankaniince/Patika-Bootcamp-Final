@@ -28,33 +28,34 @@ router.post("/", async (req, res) => {
 
   try {
     const outputMessage = `
-    <h1>Mail Details </h1>
+    <h1>Mail Details</h1>
     <ul>
-      <li>Name: ${req.body.name}</li>
-      <li>Email:  ${req.body.email}</li>
+      <li>Name: ${name}</li>
+      <li>Email: ${email}</li>
     </ul>
     <h1>Message</h1>
-    <p>${req.body.message}</p>
+    <p>${message}</p>
     `;
 
+    // Configure the transporter with environment variables
     let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_SECURE === "true", // Convert to boolean
       auth: {
-        user: "kkicontact19@gmail.com",
-        pass: "ajgyqvbeyfhyjbul",
+        user: process.env.SMTP_USER, // Your email address
+        pass: process.env.SMTP_PASS, // Your email password or app-specific password
       },
       tls: {
-        rejectUnauthorized: false,
+        rejectUnauthorized: process.env.SMTP_REJECT_UNAUTHORIZED === "false", // Convert to boolean
       },
-      debug: true,
-      logger: true,
+      debug: process.env.SMTP_DEBUG === "true", // Enable debug if set
+      logger: process.env.SMTP_LOGGER === "true", // Enable logging if set
     });
 
     let info = await transporter.sendMail({
-      from: '"Book Store Contact Form" <kkicontact19@gmail.com>',
-      to: "kaankaniince@gmail.com",
+      from: `"Book Store Contact Form" <${process.env.SMTP_USER}>`,
+      to: process.env.RECIPIENT_EMAIL, // Use recipient email from environment
       subject: `Book Store Contact Form New Message: ${subject}`,
       html: outputMessage,
     });
@@ -67,6 +68,5 @@ router.post("/", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

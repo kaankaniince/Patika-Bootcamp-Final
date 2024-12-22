@@ -14,7 +14,6 @@ import { AppShellAdminLayout } from "../layout/appShellAdminLayout";
 import { Customers } from "../pages/Customers/Customers";
 import { Products } from "../pages/Products/Products";
 import PrivateRoute from "./PrivateRoute"; // Adjust path if necessary
-import Orders from "../pages/Orders/Orders";
 import { useAuth } from "../store/AuthContext";
 
 export default function AppRoutes() {
@@ -69,14 +68,6 @@ export default function AppRoutes() {
             element={
               <PrivateRoute requiredRole="admin">
                 <Products />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/Orders"
-            element={
-              <PrivateRoute requiredRole="admin">
-                <Orders />
               </PrivateRoute>
             }
           />

@@ -1,4 +1,3 @@
-import cx from "clsx";
 import { Overlay, Title } from "@mantine/core";
 import classes from "./AboutImage.module.css";
 

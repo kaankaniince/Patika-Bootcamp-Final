@@ -2,7 +2,7 @@
   position: relative;
   padding-top: 180px;
   padding-bottom: 130px;
-  background-image: url(https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+  background-image: url(https://plus.unsplash.com/premium_photo-1677567996070-68fa4181775a?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
   background-size: cover;
   background-position: center;
 }
@@ -38,10 +38,6 @@
   }
 }
 
-.highlight {
-  color: var(--mantine-color-primary-4);
-}
-
 .description {
   color: var(--mantine-color-gray-0);
   text-align: center;
@@ -52,43 +48,4 @@
     font-size: var(--mantine-font-size-md);
     text-align: left;
   }
-}
-
-.controls {
-  margin-top: calc(var(--mantine-spacing-xl) * 1.5);
-  display: flex;
-  justify-content: center;
-  padding-left: var(--mantine-spacing-md);
-  padding-right: var(--mantine-spacing-md);
-}
-
-@media (max-width: 576px) {
-  .controls {
-    flex-direction: column;
-  }
-}
-
-.control {
-  height: 42px;
-  font-size: var(--mantine-font-size-md);
-}
-
-.control:not(:first-of-type) {
-  margin-left: var(--mantine-spacing-md);
-}
-
-@media (max-width: 576px) {
-  .control:not(:first-of-type) {
-    margin-top: var(--mantine-spacing-md);
-    margin-left: 0;
-  }
-}
-
-.secondaryControl {
-  color: var(--mantine-color-white);
-  background-color: rgba(255, 255, 255, 0.4);
-}
-
-.secondaryControl:hover {
-  background-color: rgba(255, 255, 255, 0.45);
 }

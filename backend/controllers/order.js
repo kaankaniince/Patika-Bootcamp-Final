@@ -1,10 +1,13 @@
 const { producer } = require("../utils/kafka");
+const basketService = require("../services/basket"); // Import basketService to use the clearBasket functionality
 
 const orderController = {
   createOrder: async (req, res) => {
-    const { userId, basket } = req.body;
+    const { userId, basket, paymentMethod, cardNumber, cardHolder, cvv, amount } = req.body;
 
-    if (!userId || !basket || basket.length === 0) {
+    console.log("Received data in createOrder:", req.body);
+
+    if (!userId || !basket || basket.length === 0 || !paymentMethod || !amount) {
       return res.status(400).json({ message: "Invalid order data" });
     }
 
@@ -14,21 +17,31 @@ const orderController = {
         0
       );
 
-      // Sipariş oluşturma işlemini burada veritabanınıza kaydedebilirsiniz.
-      // orderId gibi bir id oluşturun.
-      const orderId = "ORD-" + Date.now(); // örnek ID üretimi
+      const orderId = `ORD-${Date.now()}`;
 
-      // Kafka'ya sipariş oluşturma mesajı gönder
+      // Send order details to Kafka topic "order-created"
       await producer.send({
         topic: "order-created",
         messages: [
           {
-            value: JSON.stringify({ userId, basket, totalAmount, orderId }),
+            value: JSON.stringify({
+              userId,
+              basket,
+              totalAmount,
+              orderId,
+              paymentMethod,
+              cardNumber,
+              cardHolder,
+              cvv,
+            }),
           },
         ],
       });
 
-      res.status(200).json({ message: "Order created", orderId, totalAmount });
+      // Clear the user's cart after the order is successfully created
+      await basketService.clearBasket({ userId });
+
+      res.status(200).json({ message: "Order created and cart cleared", orderId, totalAmount });
     } catch (error) {
       console.error("Error in createOrder:", error);
       res.status(500).json({ message: "Internal Server Error" });

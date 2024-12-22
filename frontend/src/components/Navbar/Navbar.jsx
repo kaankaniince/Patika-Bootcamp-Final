@@ -23,7 +23,6 @@ const tabs = {
     { link: "/Contact", label: "Contact", icon: IconMail },
   ],
   Admin: [
-    { link: "/Orders", label: "Orders", icon: IconShoppingCart },
     { link: "/Products", label: "Products", icon: IconBooks },
     { link: "/Customers", label: "Customers", icon: IconUsers },
   ],
@@ -38,7 +37,6 @@ export function NavbarPage() {
   useEffect(() => {
     // Set the initial section based on the current location path
     if (
-      location.pathname.includes("Orders") ||
       location.pathname.includes("Products") ||
       location.pathname.includes("Customers")
     ) {

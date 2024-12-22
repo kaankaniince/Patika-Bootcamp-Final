@@ -10,17 +10,24 @@ import {
   Table,
   Image,
   Flex,
-  Divider
+  Divider,
 } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
+import { showNotification } from "@mantine/notifications"; // Import Mantine notifications
+import PaymentModal from "../Payment/PaymentModal";
 
 const Cart = () => {
   const { user, isAuthenticated } = useAuth();
   const [cart, setCart] = useState([]);
+  const [modalOpened, setModalOpened] = useState(false);
+  const navigate = useNavigate();
 
   const fetchCart = async () => {
     if (!user || !isAuthenticated) return;
     try {
-      const response = await axios.get(`http://localhost:3000/api/basket/${user.userId}`);
+      const response = await axios.get(
+        `http://localhost:3000/api/basket/${user.userId}`
+      );
       setCart(response.data.response || []);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -31,49 +38,73 @@ const Cart = () => {
     fetchCart();
   }, [user, isAuthenticated]);
 
-  const handleRemove = async (productId) => {
-    // Bu fonksiyonun backend tarafında quantity azaltacak şekilde ayarlandığını varsayıyoruz.
-    try {
-      await axios.delete("http://localhost:3000/api/basket", {
-        data: { userId: user.userId, productId },
-      });
-      fetchCart();
-    } catch (error) {
-      console.error("Error removing product:", error);
-    }
-  };
-
-  const handleAdd = async (item) => {
-    // Bu fonksiyon product eklerken quantity artırır diye varsayıyoruz.
-    try {
-      await axios.post("http://localhost:3000/api/basket", {
-        userId: user.userId,
-        product: {
-          productId: item.productId,
-          productName: item.productName,
-          price: item.price,
-          category: item.category,
-          author: item.author,
-          image: item.image,
-          description: item.description,
-          stock: item.stock,
-          slug: item.slug
-        }
-      });
-      fetchCart();
-    } catch (error) {
-      console.error("Error adding product:", error);
-    }
-  };
-
   const handleClear = async () => {
     try {
       await axios.post("http://localhost:3000/api/basket/clear", {
         userId: user?.userId,
       });
       fetchCart();
+      showNotification({
+        title: "Cart Cleared",
+        message: "Your cart has been successfully cleared.",
+        color: "green",
+      });
     } catch (error) {
       console.error("Error clearing cart:", error);
+      showNotification({
+        title: "Error",
+        message: "Failed to clear your cart. Please try again.",
+        color: "red",
+      });
+    }
+  };
+
+  const handlePayment = () => {
+    setModalOpened(true);
+  };
+
+  const handleModalSubmit = async (paymentData) => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/order/create-order", {
+        userId: user?.userId,
+        basket: cart,
+        paymentMethod: paymentData.paymentMethod,
+        cardNumber: paymentData.cardNumber,
+        cardHolder: paymentData.cardHolder,
+        cvv: paymentData.cvv,
+        amount: paymentData.amount,
+      });
+
+      if (response.data.orderId) {
+        showNotification({
+          title: "Payment Successful",
+          message: `Order ID: ${response.data.orderId}`,
+          color: "green",
+        });
+
+        // Clear the cart
+        setCart([]);
+
+        // Delay before redirecting to the homepage
+        setTimeout(() => {
+          navigate("/");
+        }, 3000); // 3-second delay
+      } else {
+        showNotification({
+          title: "Payment Failed",
+          message: "Something went wrong during payment. Please try again.",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      console.error("Error during payment:", error);
+      showNotification({
+        title: "Payment Error",
+        message: "Payment failed. Please try again later.",
+        color: "red",
+      });
+    } finally {
+      setModalOpened(false);
     }
   };
 
@@ -93,8 +124,10 @@ const Cart = () => {
     );
   }
 
-  // Toplam fiyat hesaplama
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + item.price * (item.quantity || 1),
+    0
+  );
 
   const rows = cart.map((item, index) => (
     <Table.Tr key={index}>
@@ -118,9 +151,21 @@ const Cart = () => {
       <Table.Td>{item.category}</Table.Td>
       <Table.Td>
         <Group spacing="xs">
-          <Button variant="outline" size="xs" onClick={() => handleRemove(item.productId)}>-</Button>
+          <Button
+            variant="outline"
+            size="xs"
+            onClick={() => handleRemove(item.productId)}
+          >
+            -
+          </Button>
           <Text>{item.quantity || 1}</Text>
-          <Button variant="outline" size="xs" onClick={() => handleAdd(item)}>+</Button>
+          <Button
+            variant="outline"
+            size="xs"
+            onClick={() => handleAdd(item)}
+          >
+            +
+          </Button>
         </Group>
       </Table.Td>
       <Table.Td>
@@ -149,20 +194,29 @@ const Cart = () => {
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
 
-          <Divider my="sm" />
+      <Divider my="sm" />
 
       <Flex justify="flex-end" align="center" mb="sm">
-        <Text fw={700} fz="lg">Total Price: ${totalPrice.toFixed(2)}</Text>
+        <Text fw={700} fz="lg">
+          Total Price: ${totalPrice.toFixed(2)}
+        </Text>
       </Flex>
 
       <Group justify="space-between" mt="md">
         <Button color="red" onClick={handleClear}>
           Clear Cart
         </Button>
-        <Button color="green">
-        Payment
+        <Button color="green" onClick={handlePayment}>
+          Payment
         </Button>
       </Group>
+
+      <PaymentModal
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+        onSubmit={handleModalSubmit}
+        totalAmount={totalPrice}
+      />
     </Container>
   );
 };

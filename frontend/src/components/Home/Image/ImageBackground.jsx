@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { Button, Container, Overlay, Text, Title } from '@mantine/core';
+import { Container, Overlay, Text, Title } from '@mantine/core';
 import classes from './ImageBackground.module.css';
 
 export function ImageBackground() {
@@ -9,27 +9,14 @@ export function ImageBackground() {
 
       <div className={classes.inner}>
         <Title className={classes.title}>
-          Automated AI code reviews for{' '}
-          <Text component="span" inherit className={classes.highlight}>
-            any stack
-          </Text>
+          Welcome to Our Book-Shop
         </Title>
 
         <Container size={640}>
           <Text size="lg" className={classes.description}>
-            Build more reliable software with AI companion. AI is also trained to detect lazy
-            developers who do nothing and just complain on Twitter.
+            Discover a world of books at your fingertips. Build your perfect library with us.
           </Text>
         </Container>
-
-        <div className={classes.controls}>
-          <Button className={classes.control} variant="white" size="lg">
-            Get started
-          </Button>
-          <Button className={cx(classes.control, classes.secondaryControl)} size="lg">
-            Live demo
-          </Button>
-        </div>
       </div>
     </div>
   );

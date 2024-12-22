@@ -9,7 +9,7 @@ export function ImageBackground() {
 
       <div className={classes.inner}>
         <Title className={classes.title}>
-          Welcome to Our Book-Shop
+          Welcome to Kaan Book-Shop
         </Title>
 
         <Container size={640}>

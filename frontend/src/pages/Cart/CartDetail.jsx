@@ -38,6 +38,35 @@ const Cart = () => {
     fetchCart();
   }, [user, isAuthenticated]);
 
+  const handleRemove = async (productId) => {
+    try {
+      await axios.delete("http://localhost:3000/api/basket", {
+        data: { userId: user.userId, productId },
+      });
+      fetchCart();
+    } catch (error) {
+      console.error("Error removing product:", error);
+    }
+  };
+  
+  const handleAdd = async (item) => {
+    try {
+      await axios.post("http://localhost:3000/api/basket", {
+        userId: user.userId,
+        product: {
+          productId: item.productId,
+          name: item.productName,
+          price: item.price,
+          quantity: 1,
+        },
+      });
+      fetchCart();
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+  
+
   const handleClear = async () => {
     try {
       await axios.post("http://localhost:3000/api/basket/clear", {

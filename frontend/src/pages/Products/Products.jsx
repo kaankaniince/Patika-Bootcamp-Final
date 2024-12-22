@@ -183,9 +183,11 @@ export function Products() {
   };
 
   const categoryColors = {
-    "category 1": "blue",
-    "category 2": "teal",
-    "category 3": "pink",
+    "Fiction": "blue",
+    "Non-Fiction": "teal",
+    "Biography": "pink",
+    "Science and Technology": "indigo",
+    "Philosophy": "purple",
   };
 
   const handleDelete = async (id) => {
@@ -420,9 +422,11 @@ export function Products() {
             label="Category"
             placeholder="Enter product category"
             data={[
-              { value: "category 1", label: "Category 1" },
-              { value: "category 2", label: "Category 2" },
-              { value: "category 3", label: "Category 3" },
+              { value: "Fiction", label: "Fiction" },
+              { value: "Non-Fiction", label: "Non-Fiction" },
+              { value: "Biography", label: "Biography" },
+              { value: "Science and Technology", label: "Science and Technology" },
+              { value: "Philosophy", label: "Philosophy" },
             ]}
             value={newProduct.category}
             onChange={(value) =>

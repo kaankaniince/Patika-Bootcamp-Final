@@ -1,19 +1,15 @@
 import {
-  IconBook,
   IconBook2,
-  IconBrandInstagram,
-  IconBrandTwitter,
-  IconBrandYoutube,
+  IconBrandGithub,
+  IconBrandLinkedin,
 } from "@tabler/icons-react";
 import { ActionIcon, Anchor, Group } from "@mantine/core";
 import classes from "./Footer.module.css";
 
 const links = [
-  { link: "#", label: "Contact" },
-  { link: "#", label: "Privacy" },
-  { link: "#", label: "Blog" },
-  { link: "#", label: "Store" },
-  { link: "#", label: "Careers" },
+  { link: "/Contact", label: "Contact" },
+  { link: "/About", label: "About" },
+  { link: "/Category", label: "Category" },
 ];
 
 export function Footer() {
@@ -23,7 +19,6 @@ export function Footer() {
       key={link.label}
       href={link.link}
       lh={1}
-      onClick={(event) => event.preventDefault()}
       size="sm"
     >
       {link.label}
@@ -38,14 +33,25 @@ export function Footer() {
         <Group className={classes.links}>{items}</Group>
 
         <Group gap="xs" justify="flex-end" wrap="nowrap">
-          <ActionIcon size="lg" variant="default" radius="xl">
-            <IconBrandTwitter size={18} stroke={1.5} />
+          <ActionIcon
+            size="lg"
+            variant="default"
+            radius="xl"
+            component="a"
+            href="https://github.com/kaankaniince" // Replace with your GitHub URL
+            target="_blank"
+          >
+            <IconBrandGithub size={18} stroke={1.5} />
           </ActionIcon>
-          <ActionIcon size="lg" variant="default" radius="xl">
-            <IconBrandYoutube size={18} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon size="lg" variant="default" radius="xl">
-            <IconBrandInstagram size={18} stroke={1.5} />
+          <ActionIcon
+            size="lg"
+            variant="default"
+            radius="xl"
+            component="a"
+            href="https://www.linkedin.com/in/kaankaniince/" // Replace with your LinkedIn URL
+            target="_blank"
+          >
+            <IconBrandLinkedin size={18} stroke={1.5} />
           </ActionIcon>
         </Group>
       </div>

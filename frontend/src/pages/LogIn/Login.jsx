@@ -90,12 +90,6 @@ function Login() {
                     value={password}
                     onChange={(event) => setPassword(event.currentTarget.value)}
                 />
-                <Group justify="space-between" mt="lg">
-                    <Checkbox label="Remember me" />
-                    <Anchor component="button" size="sm">
-                        Forgot password?
-                    </Anchor>
-                </Group>
                 <Button fullWidth mt="xl" onClick={handleLogin}>
                     Sign in
                 </Button>

@@ -21,7 +21,13 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["category 1", "category 2", "category 3"],
+      enum: [
+        "Fiction",
+        "Non-Fiction",
+        "Biography",
+        "Science and Technology",
+        "Philosophy",
+      ],
       required: true,
     },
     price: {
